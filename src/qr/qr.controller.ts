@@ -64,10 +64,10 @@ export class QrController {
   @Get('dynamic-id/:qrId')
   async getQrLink(@Param('qrId') qrId: string) {
     try {
-      const qr = await this.qrService.getQr(qrId);
-      const link = qr.link;
-      console.log(link);
-      return link;
+      const response = await this.qrService.getQr(qrId);
+      const qr = response;
+      console.log(qr);
+      return qr;
     } catch (error) {
       throw error;
     }
