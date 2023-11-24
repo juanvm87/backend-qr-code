@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2d25d4bc.css",
+    "main.js": "/static/js/main.585a72d4.js",
+    "static/js/498.41fbc0ec.chunk.js": "/static/js/498.41fbc0ec.chunk.js",
+    "static/js/703.b6b3b18e.chunk.js": "/static/js/703.b6b3b18e.chunk.js",
+    "static/js/403.e908ab86.chunk.js": "/static/js/403.e908ab86.chunk.js",
+    "static/media/skyhigh.jpg": "/static/media/skyhigh.5e00ce00bbc0236b6d10.jpg",
+    "static/media/study_table.jpg": "/static/media/study_table.986238f09d4aa17231fc.jpg",
+    "static/media/notFoundQr.png": "/static/media/notFoundQr.9887a957b5714cff5577.png",
+    "index.html": "/index.html",
+    "main.2d25d4bc.css.map": "/static/css/main.2d25d4bc.css.map",
+    "main.585a72d4.js.map": "/static/js/main.585a72d4.js.map",
+    "498.41fbc0ec.chunk.js.map": "/static/js/498.41fbc0ec.chunk.js.map",
+    "703.b6b3b18e.chunk.js.map": "/static/js/703.b6b3b18e.chunk.js.map",
+    "403.e908ab86.chunk.js.map": "/static/js/403.e908ab86.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2d25d4bc.css",
+    "static/js/main.585a72d4.js"
+  ]
+}
