@@ -1,27 +1,24 @@
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export const QrSchema = new mongoose.Schema(
-  {
-    title: { type: String },
-    type: { type: String, required: true },
-    link: { type: String, required: true },
-    ownerId: { type: String, required: true },
-    input: { type: Object, required: true },
-    isDynamic: { type: Boolean },
-    pin: { type: String },
-  },
-  {
-    timestamps: true, // Enable timestamps here
-  },
-);
+import { Document } from 'mongoose';
 
-export interface Qr {
-  id: string;
+@Schema({
+  timestamps: true,
+})
+export class Qr extends Document {
+  @Prop()
   title: string;
+  @Prop()
   type: string;
+  @Prop()
   link: string;
+  @Prop()
   ownerId: string;
+  @Prop({ type: Object })
   input: object;
+  @Prop()
   isDynamic: boolean;
+  @Prop()
   pin: string;
 }
+export const QrSchema = SchemaFactory.createForClass(Qr);

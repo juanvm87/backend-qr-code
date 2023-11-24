@@ -3,6 +3,7 @@ import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 export class SignUpDto {
   @IsNotEmpty()
   readonly name: string;
+
   @IsNotEmpty()
   readonly phone: string;
 

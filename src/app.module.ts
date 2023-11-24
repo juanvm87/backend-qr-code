@@ -4,9 +4,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import 'dotenv/config';
 import { UserModule } from './user/user.module';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   imports: [
+    StatisticModule,
     QrModule,
     UserModule,
     ConfigModule.forRoot(),

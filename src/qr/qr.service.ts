@@ -59,7 +59,9 @@ export class QrService {
   async getQr(qrId: string) {
     try {
       const qr = await this.qrModel.findById(qrId).exec();
-
+      if (!qr) {
+        throw new NotFoundException(`QR code with ID ${qrId} not found`);
+      }
       return qr;
     } catch (error) {
       console.error(error);
@@ -102,14 +104,12 @@ export class QrService {
     }
   }
 
-  async removeQrCode(pin: string, ownerId: string) {
+  async removeQrCode(_id: string) {
     try {
-      const result = await this.qrModel
-        .deleteOne({ ownerId: ownerId, pin: pin })
-        .exec();
+      const result = await this.qrModel.deleteOne({ _id: _id }).exec();
 
       if (result.deletedCount === 0) {
-        throw new NotFoundException(`QR code with ID ${pin} not found`);
+        throw new NotFoundException(`QR code with ID ${_id} not found`);
       }
     } catch (error) {
       console.error(error);

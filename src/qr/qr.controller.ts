@@ -65,9 +65,14 @@ export class QrController {
   async getQrLink(@Param('qrId') qrId: string) {
     try {
       const response = await this.qrService.getQr(qrId);
-      const qr = response;
-      console.log(qr);
-      return qr;
+
+      if (!response) {
+        console.log('222222222');
+
+        return;
+      }
+
+      return response;
     } catch (error) {
       throw error;
     }
@@ -104,9 +109,9 @@ export class QrController {
 
   @Delete(':qrId')
   @UseGuards(AuthGuard())
-  async removeQrCode(@Param('qrId') qrId: string, @Req() req) {
+  async removeQrCode(@Param('qrId') qrId: string) {
     try {
-      await this.qrService.removeQrCode(qrId, req.user.userId);
+      await this.qrService.removeQrCode(qrId);
       return { message: 'QR code deleted successfully' };
     } catch (error) {
       console.error(error);
