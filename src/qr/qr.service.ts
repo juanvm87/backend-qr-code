@@ -1,12 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Qr } from './qr.model';
+import { Qr } from './qr.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateQrDto } from 'src/dtos/updateQrDto';
+import { Statistic } from 'src/statistic/statistic.schema';
 
 @Injectable()
 export class QrService {
-  constructor(@InjectModel('Qr') private readonly qrModel: Model<Qr>) {}
+  constructor(
+    @InjectModel('Qr') private readonly qrModel: Model<Qr>,
+    @InjectModel(Statistic.name)
+    private readonly statisticModel: Model<Statistic>,
+  ) {}
 
   async insertQr(
     title: string,
@@ -110,6 +115,13 @@ export class QrService {
 
       if (result.deletedCount === 0) {
         throw new NotFoundException(`QR code with ID ${_id} not found`);
+      }
+      if (result.acknowledged) {
+        const response = await this.statisticModel
+          .deleteMany({ qrId: _id })
+          .exec();
+
+        console.log('dddddddddddd', response);
       }
     } catch (error) {
       console.error(error);

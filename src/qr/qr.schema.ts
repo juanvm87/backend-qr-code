@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
 import { Document } from 'mongoose';
 
 @Schema({
@@ -21,4 +20,5 @@ export class Qr extends Document {
   @Prop()
   pin: string;
 }
+
 export const QrSchema = SchemaFactory.createForClass(Qr);

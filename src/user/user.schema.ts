@@ -18,6 +18,8 @@ export class User extends Document {
 
   @Prop()
   password: string;
+  @Prop()
+  signinByGoogle: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
