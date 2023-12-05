@@ -6,6 +6,7 @@ import {
   UseGuards,
   Get,
   Req,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from '../dtos/login.dto';
@@ -13,6 +14,12 @@ import { SignUpDto } from '../dtos/signup.dto';
 import { UserUpdate } from 'src/dtos/userUpdate.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_SECRET,
+);
 
 @ApiBearerAuth()
 @Controller('user')
@@ -56,11 +63,37 @@ export class UserController {
   @UseGuards(AuthGuard())
   async getUser(@Req() req) {
     try {
-      const user = await this.authService.getUser(req.user._id);
+      const id = req.user._id;
+      const user = await this.authService.getUser(id);
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
       return user;
     } catch (error) {
       console.log(error);
       throw error;
     }
+  }
+
+  @Post('google-signin')
+  async googleAuth(@Body() token: any) {
+    console.log(token);
+
+    const ticket = await client.verifyIdToken({
+      idToken: token.data,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const userInfo = ticket.getPayload();
+
+    const reply = await this.authService.googleLogin({
+      name: userInfo.name,
+      phone: '',
+      email: userInfo.email,
+      password: '',
+    });
+
+    return reply;
   }
 }

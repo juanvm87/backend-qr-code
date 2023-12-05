@@ -1,12 +1,11 @@
 import {
   Injectable,
   UnauthorizedException,
-  NotFoundException,
   ConflictException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from './schemas/user.schema';
+import { User } from './user.schema';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from '../dtos/signup.dto';
@@ -23,16 +22,9 @@ export class UserService {
 
   async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
     try {
-      let userId;
+      const userId = await this.createUserId();
       const { name, phone, email, password } = signUpDto;
-      let reply;
-      do {
-        userId = String(Math.floor(1 + Math.random() * 999998)).padStart(
-          6,
-          '0',
-        );
-        reply = await this.userModel.findOne({ userId }).exec();
-      } while (reply);
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = await this.userModel.create({
@@ -68,7 +60,6 @@ export class UserService {
       }
 
       const token = this.jwtService.sign({ _id: user._id });
-      console.log('71 auth.services token', token);
 
       return { token };
     } catch (error) {
@@ -79,9 +70,7 @@ export class UserService {
   async getUser(id: string) {
     try {
       const user = await this.userModel.findById(id).exec();
-      if (!user) {
-        throw new NotFoundException(`User with ID ${id} not found`);
-      }
+
       return user;
     } catch (error) {
       console.error(error);
@@ -133,6 +122,50 @@ export class UserService {
         .exec();
 
       return updatedUser;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async googleLogin(signUpDto: SignUpDto) {
+    const { name, email } = signUpDto;
+    const checkedUser = await this.userModel.findOne({ email });
+    const shortId = await this.createUserId();
+
+    if (!checkedUser) {
+      const user = await this.userModel.create({
+        userId: shortId,
+        name,
+        phone: '',
+        email,
+        password: '',
+        signinByGoogle: true,
+      });
+      const token = this.jwtService.sign({ _id: user._id });
+      return { token };
+    }
+    if (checkedUser) {
+      const token = this.jwtService.sign({ _id: checkedUser._id });
+
+      return { token };
+    }
+  }
+
+  async createUserId() {
+    try {
+      let userId;
+
+      let reply;
+      do {
+        userId = String(Math.floor(1 + Math.random() * 999998)).padStart(
+          6,
+          '0',
+        );
+        reply = await this.userModel.findOne({ userId }).exec();
+      } while (reply);
+
+      return userId;
     } catch (error) {
       console.error(error);
       throw error;
