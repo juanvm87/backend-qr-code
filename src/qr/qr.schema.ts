@@ -18,6 +18,8 @@ export class Qr extends Document {
   @Prop()
   isDynamic: boolean;
   @Prop()
+  isFormDisplay: boolean;
+  @Prop()
   pin: string;
 }
 

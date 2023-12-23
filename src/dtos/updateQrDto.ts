@@ -3,4 +3,5 @@ export class UpdateQrDto {
   type?: string;
   link?: string;
   input?: object;
+  isFormDisplay?: boolean;
 }

@@ -30,8 +30,10 @@ export class QrController {
         createQrDto.link,
         createQrDto.input,
         createQrDto.isDynamic,
+        createQrDto.isFormDisplay,
         req.user.userId,
       );
+
       return generatedId;
     } catch (error) {
       throw error;
@@ -54,6 +56,8 @@ export class QrController {
   @UseGuards(AuthGuard())
   async getQr(@Param('qrId') qrId: string) {
     try {
+      console.log('controller get', qrId);
+
       const qr = await this.qrService.getQr(qrId);
 
       return qr;
@@ -67,8 +71,6 @@ export class QrController {
       const response = await this.qrService.getQr(qrId);
 
       if (!response) {
-        console.log('222222222');
-
         return;
       }
 
@@ -99,7 +101,6 @@ export class QrController {
   ) {
     try {
       const qr = await this.qrService.findQrByOwnerIdAndPin(ownerId, pin);
-
       return qr;
     } catch (error) {
       console.error(error);

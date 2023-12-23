@@ -19,6 +19,7 @@ export class QrService {
     link: string,
     input: object,
     isDynamic: boolean,
+    isFormDisplay: boolean,
     ownerId: string,
   ) {
     try {
@@ -33,6 +34,8 @@ export class QrService {
         reply = await this.qrModel.findOne({ ownerId, pin }).exec();
       } while (reply);
 
+      console.log('is form------------->>', isFormDisplay);
+
       const newQr = await this.qrModel.create({
         title,
         type,
@@ -40,6 +43,7 @@ export class QrService {
         ownerId,
         input,
         isDynamic,
+        isFormDisplay,
         pin,
       });
 
@@ -64,6 +68,8 @@ export class QrService {
   async getQr(qrId: string) {
     try {
       const qr = await this.qrModel.findById(qrId).exec();
+      console.log(qr);
+
       if (!qr) {
         throw new NotFoundException(`QR code with ID ${qrId} not found`);
       }
@@ -74,7 +80,7 @@ export class QrService {
     }
   }
 
-  async updateQr(id: string, updateQrDto: UpdateQrDto) {
+  async updateQr(_id: string, updateQrDto: UpdateQrDto) {
     try {
       const updatedFields: any = {};
 
@@ -90,16 +96,19 @@ export class QrService {
       if (updateQrDto.input) {
         updatedFields.input = updateQrDto.input;
       }
+      if (updateQrDto.isFormDisplay) {
+        updatedFields.isFormDisplay = updateQrDto.isFormDisplay;
+      }
 
       const updatedQr = await this.qrModel
-        .findByIdAndUpdate(id, updatedFields, {
+        .findByIdAndUpdate(_id, updatedFields, {
           new: true, // Return the updated document
           runValidators: true, // Run Mongoose validators
         })
         .exec();
 
       if (!updatedQr) {
-        throw new NotFoundException(`QR code with ID ${id} not found`);
+        throw new NotFoundException(`QR code with ID ${_id} not found`);
       }
 
       return updatedQr;
@@ -117,11 +126,7 @@ export class QrService {
         throw new NotFoundException(`QR code with ID ${_id} not found`);
       }
       if (result.acknowledged) {
-        const response = await this.statisticModel
-          .deleteMany({ qrId: _id })
-          .exec();
-
-        console.log('dddddddddddd', response);
+        await this.statisticModel.deleteMany({ qrId: _id }).exec();
       }
     } catch (error) {
       console.error(error);

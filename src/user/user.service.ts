@@ -33,6 +33,7 @@ export class UserService {
         phone,
         email,
         password: hashedPassword,
+        signinByGoogle: false,
       });
 
       const token = this.jwtService.sign({ _id: user._id });
