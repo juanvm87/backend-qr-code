@@ -20,4 +20,6 @@ export class CreateQrDto {
 
   @IsBoolean()
   isFormDisplay: boolean;
+
+  formResponses: Array<Array<object>>;
 }

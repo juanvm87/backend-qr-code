@@ -20,6 +20,8 @@ export class Qr extends Document {
   @Prop()
   isFormDisplay: boolean;
   @Prop()
+  formResponses: Array<object>;
+  @Prop()
   pin: string;
 }
 

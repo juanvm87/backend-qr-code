@@ -56,8 +56,6 @@ export class QrController {
   @UseGuards(AuthGuard())
   async getQr(@Param('qrId') qrId: string) {
     try {
-      console.log('controller get', qrId);
-
       const qr = await this.qrService.getQr(qrId);
 
       return qr;
@@ -87,7 +85,11 @@ export class QrController {
     @Body() updateQrDto: UpdateQrDto,
   ) {
     try {
+      console.log('DTOooooo', updateQrDto);
       const updatedQr = await this.qrService.updateQr(qrId, updateQrDto);
+
+      console.log('updateeeeeddddddd', updatedQr);
+
       return updatedQr;
     } catch (error) {
       throw error;
@@ -119,4 +121,10 @@ export class QrController {
       throw error;
     }
   }
+
+  // @Patch('form-response/:qrId')
+  // async addResponse(
+  //   @Param('qrId') qrId: string,
+  //   @Body() updateQrDto: UpdateQrDto,
+  // ) {}
 }

@@ -34,8 +34,6 @@ export class QrService {
         reply = await this.qrModel.findOne({ ownerId, pin }).exec();
       } while (reply);
 
-      console.log('is form------------->>', isFormDisplay);
-
       const newQr = await this.qrModel.create({
         title,
         type,
@@ -68,7 +66,6 @@ export class QrService {
   async getQr(qrId: string) {
     try {
       const qr = await this.qrModel.findById(qrId).exec();
-      console.log(qr);
 
       if (!qr) {
         throw new NotFoundException(`QR code with ID ${qrId} not found`);
@@ -98,6 +95,24 @@ export class QrService {
       }
       if (updateQrDto.isFormDisplay) {
         updatedFields.isFormDisplay = updateQrDto.isFormDisplay;
+      }
+      if (updateQrDto.formResponses) {
+        const qrupdated = await this.qrModel
+          .findByIdAndUpdate(
+            _id,
+            {
+              $push: {
+                formResponses: updateQrDto.formResponses,
+              },
+            },
+            {
+              new: true, // Return the updated document
+              runValidators: true, // Run Mongoose validators
+            },
+          )
+          .exec();
+
+        return qrupdated;
       }
 
       const updatedQr = await this.qrModel
